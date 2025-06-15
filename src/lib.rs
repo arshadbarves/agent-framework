@@ -74,6 +74,9 @@ pub mod edge;
 #[cfg_attr(docsrs, doc(cfg(feature = "streaming")))]
 pub mod streaming;
 
+/// Tools framework for integrating external capabilities
+pub mod tools;
+
 // Re-export core types for convenience
 pub use error::{GraphError, GraphResult};
 pub use graph::{Graph, GraphBuilder, ExecutionContext, ExecutionConfig};
