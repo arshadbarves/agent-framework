@@ -80,6 +80,9 @@ pub mod tools;
 /// Human-in-the-loop interaction system
 pub mod human;
 
+/// Enterprise features for multi-tenancy, security, and compliance
+pub mod enterprise;
+
 // Re-export core types for convenience
 pub use error::{GraphError, GraphResult};
 pub use graph::{Graph, GraphBuilder, ExecutionContext, ExecutionConfig};
