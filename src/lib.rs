@@ -83,6 +83,9 @@ pub mod human;
 /// Enterprise features for multi-tenancy, security, and compliance
 pub mod enterprise;
 
+/// LLM integration framework with multi-provider support
+pub mod llm;
+
 // Re-export core types for convenience
 pub use error::{GraphError, GraphResult};
 pub use graph::{Graph, GraphBuilder, ExecutionContext, ExecutionConfig};
