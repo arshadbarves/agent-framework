@@ -77,6 +77,9 @@ pub mod streaming;
 /// Tools framework for integrating external capabilities
 pub mod tools;
 
+/// Human-in-the-loop interaction system
+pub mod human;
+
 // Re-export core types for convenience
 pub use error::{GraphError, GraphResult};
 pub use graph::{Graph, GraphBuilder, ExecutionContext, ExecutionConfig};
