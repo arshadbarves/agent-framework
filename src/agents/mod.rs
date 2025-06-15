@@ -433,6 +433,11 @@ impl Agent {
     pub fn memory(&self) -> &memory::AgentMemory {
         &self.memory
     }
+
+    /// Get mutable agent memory
+    pub fn memory_mut(&mut self) -> &mut memory::AgentMemory {
+        &mut self.memory
+    }
     
     /// Reset agent state
     pub fn reset(&mut self) {

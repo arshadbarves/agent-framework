@@ -81,7 +81,7 @@ You have access to file operations, web research, and calculation tools. Always:
                 "http_get".to_string(),
                 "calculator".to_string(),
             ],
-            model: "gpt-4".to_string(),
+            model: "mock-gpt-4".to_string(),
             temperature: 0.3, // Lower temperature for more consistent code
             max_tokens: 2000,
             memory_config: MemoryConfig {
@@ -125,7 +125,7 @@ You have access to web research, file operations, and text analysis tools. Alway
                 "file_write".to_string(),
                 "calculator".to_string(),
             ],
-            model: "gpt-4".to_string(),
+            model: "mock-gpt-4".to_string(),
             temperature: 0.5,
             max_tokens: 2500,
             memory_config: MemoryConfig {
@@ -168,7 +168,7 @@ You have access to database queries, file operations, and calculation tools. Alw
                 "text_search".to_string(),
                 "http_get".to_string(),
             ],
-            model: "gpt-4".to_string(),
+            model: "mock-gpt-4".to_string(),
             temperature: 0.4,
             max_tokens: 2000,
             memory_config: MemoryConfig {
@@ -211,7 +211,7 @@ You have access to research, file operations, and text analysis tools. Always:
                 "file_write".to_string(),
                 "http_get".to_string(),
             ],
-            model: "gpt-4".to_string(),
+            model: "mock-gpt-4".to_string(),
             temperature: 0.8, // Higher temperature for creativity
             max_tokens: 2500,
             memory_config: MemoryConfig {
@@ -253,7 +253,7 @@ You have access to calculation, file operations, and research tools. Always:
                 "text_search".to_string(),
                 "http_get".to_string(),
             ],
-            model: "gpt-4".to_string(),
+            model: "mock-gpt-4".to_string(),
             temperature: 0.4,
             max_tokens: 2000,
             memory_config: MemoryConfig {
@@ -296,7 +296,7 @@ You have access to file operations, research, and analysis tools. Always:
                 "http_get".to_string(),
                 "calculator".to_string(),
             ],
-            model: "gpt-4".to_string(),
+            model: "mock-gpt-4".to_string(),
             temperature: 0.2, // Very low temperature for consistency
             max_tokens: 1500,
             memory_config: MemoryConfig {

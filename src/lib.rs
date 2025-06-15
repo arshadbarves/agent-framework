@@ -89,6 +89,9 @@ pub mod llm;
 /// Agent system with role-based agents and collaboration
 pub mod agents;
 
+/// Advanced graph execution engine with parallel processing and streaming
+pub mod execution;
+
 // Re-export core types for convenience
 pub use error::{GraphError, GraphResult};
 pub use graph::{Graph, GraphBuilder, ExecutionContext, ExecutionConfig};
