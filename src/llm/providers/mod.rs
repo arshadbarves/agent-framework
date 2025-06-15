@@ -4,10 +4,12 @@
 
 pub mod openai;
 pub mod anthropic;
+pub mod google;
 pub mod mock;
 
 pub use openai::OpenAIProvider;
 pub use anthropic::AnthropicProvider;
+pub use google::GoogleProvider;
 pub use mock::MockProvider;
 
 // Re-export from parent module
@@ -20,6 +22,7 @@ pub fn create_provider(name: &str, config: ProviderConfig) -> Result<Arc<dyn LLM
     match name {
         "openai" => Ok(Arc::new(OpenAIProvider::with_config(config)?)),
         "anthropic" => Ok(Arc::new(AnthropicProvider::with_config(config)?)),
+        "google" => Ok(Arc::new(GoogleProvider::with_config(config)?)),
         "mock" => Ok(Arc::new(MockProvider::new())),
         _ => Err(LLMError::ProviderNotFound {
             provider: name.to_string(),
@@ -29,7 +32,7 @@ pub fn create_provider(name: &str, config: ProviderConfig) -> Result<Arc<dyn LLM
 
 /// Get all available provider names
 pub fn available_providers() -> Vec<&'static str> {
-    vec!["openai", "anthropic", "mock"]
+    vec!["openai", "anthropic", "google", "mock"]
 }
 
 /// Provider capabilities
@@ -69,6 +72,7 @@ fn get_max_context_length(provider_name: &str) -> Option<u32> {
     match provider_name {
         "openai" => Some(32768), // GPT-4 32k
         "anthropic" => Some(100000), // Claude-2 100k
+        "google" => Some(1000000), // Gemini 1M tokens
         _ => None,
     }
 }
@@ -76,7 +80,7 @@ fn get_max_context_length(provider_name: &str) -> Option<u32> {
 /// Get supported languages for provider
 fn get_supported_languages(provider_name: &str) -> Vec<String> {
     match provider_name {
-        "openai" | "anthropic" => vec![
+        "openai" | "anthropic" | "google" => vec![
             "en".to_string(), "es".to_string(), "fr".to_string(),
             "de".to_string(), "it".to_string(), "pt".to_string(),
             "ru".to_string(), "ja".to_string(), "ko".to_string(),
@@ -95,6 +99,7 @@ mod tests {
         let providers = available_providers();
         assert!(providers.contains(&"openai"));
         assert!(providers.contains(&"anthropic"));
+        assert!(providers.contains(&"google"));
         assert!(providers.contains(&"mock"));
     }
 
@@ -126,16 +131,17 @@ mod tests {
     fn test_max_context_length() {
         assert_eq!(get_max_context_length("openai"), Some(32768));
         assert_eq!(get_max_context_length("anthropic"), Some(100000));
+        assert_eq!(get_max_context_length("google"), Some(1000000));
         assert_eq!(get_max_context_length("unknown"), None);
     }
 
     #[test]
     fn test_supported_languages() {
-        let languages = get_supported_languages("openai");
+        let languages = get_supported_languages("google");
         assert!(languages.contains(&"en".to_string()));
         assert!(languages.contains(&"es".to_string()));
         assert!(languages.contains(&"zh".to_string()));
-        
+
         let unknown_languages = get_supported_languages("unknown");
         assert_eq!(unknown_languages, vec!["en".to_string()]);
     }

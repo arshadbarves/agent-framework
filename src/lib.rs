@@ -86,6 +86,9 @@ pub mod enterprise;
 /// LLM integration framework with multi-provider support
 pub mod llm;
 
+/// Agent system with role-based agents and collaboration
+pub mod agents;
+
 // Re-export core types for convenience
 pub use error::{GraphError, GraphResult};
 pub use graph::{Graph, GraphBuilder, ExecutionContext, ExecutionConfig};
