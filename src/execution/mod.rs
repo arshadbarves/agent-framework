@@ -7,6 +7,9 @@ use crate::graph::Graph;
 use crate::node::{Node, NodeId};
 use crate::state::StateManager;
 use serde_json::Value as JsonValue;
+
+// Type alias for execution state
+pub type ExecutionState = JsonValue;
 use crate::edge::{Edge, EdgeCondition};
 use serde::{Deserialize, Serialize};
 use std::collections::{HashMap, HashSet, VecDeque};
@@ -123,9 +126,9 @@ pub struct ExecutionContext {
     /// Execution configuration
     pub config: ExecutionConfig,
     /// Input state
-    pub input_state: JsonValue,
+    pub input_state: ExecutionState,
     /// Current state
-    pub current_state: JsonValue,
+    pub current_state: ExecutionState,
     /// Execution metadata
     pub metadata: HashMap<String, serde_json::Value>,
     /// Node execution history
@@ -136,7 +139,7 @@ pub struct ExecutionContext {
 
 impl ExecutionContext {
     /// Create a new execution context
-    pub fn new(config: ExecutionConfig, input_state: JsonValue) -> Self {
+    pub fn new(config: ExecutionConfig, input_state: ExecutionState) -> Self {
         Self {
             execution_id: uuid::Uuid::new_v4().to_string(),
             started_at: SystemTime::now(),
@@ -210,9 +213,9 @@ pub struct NodeExecution {
     /// End time
     pub ended_at: Option<SystemTime>,
     /// Input state
-    pub input_state: State,
+    pub input_state: ExecutionState,
     /// Output state
-    pub output_state: Option<State>,
+    pub output_state: Option<ExecutionState>,
     /// Error information
     pub error: Option<String>,
     /// Retry attempts
@@ -223,7 +226,7 @@ pub struct NodeExecution {
 
 impl NodeExecution {
     /// Create a new node execution
-    pub fn new(node_id: NodeId, input_state: State) -> Self {
+    pub fn new(node_id: NodeId, input_state: ExecutionState) -> Self {
         Self {
             node_id,
             status: NodeExecutionStatus::Pending,
@@ -244,7 +247,7 @@ impl NodeExecution {
     }
     
     /// Mark execution as completed
-    pub fn complete(&mut self, output_state: State) {
+    pub fn complete(&mut self, output_state: ExecutionState) {
         self.status = NodeExecutionStatus::Completed;
         self.ended_at = Some(SystemTime::now());
         self.output_state = Some(output_state);
@@ -322,11 +325,14 @@ impl ExecutionEngine {
     }
     
     /// Execute a graph
-    pub async fn execute_graph(
+    pub async fn execute_graph<S>(
         &self,
-        graph: &Graph,
-        input_state: State,
-    ) -> Result<ExecutionResult, ExecutionError> {
+        graph: &Graph<S>,
+        input_state: ExecutionState,
+    ) -> Result<ExecutionResult, ExecutionError>
+    where
+        S: crate::state::State,
+    {
         let mut context = ExecutionContext::new(self.config.clone(), input_state);
         context.status = ExecutionStatus::Running;
         
@@ -374,11 +380,14 @@ impl ExecutionEngine {
     }
     
     /// Internal graph execution
-    async fn execute_graph_internal(
+    async fn execute_graph_internal<S>(
         &self,
-        graph: &Graph,
+        graph: &Graph<S>,
         context: &mut ExecutionContext,
-    ) -> Result<ExecutionResult, ExecutionError> {
+    ) -> Result<ExecutionResult, ExecutionError>
+    where
+        S: crate::state::State,
+    {
         // Validate graph
         self.validate_graph(graph)?;
         
@@ -394,7 +403,10 @@ impl ExecutionEngine {
     }
     
     /// Validate graph for execution
-    fn validate_graph(&self, graph: &Graph) -> Result<(), ExecutionError> {
+    fn validate_graph<S>(&self, graph: &Graph<S>) -> Result<(), ExecutionError>
+    where
+        S: crate::state::State,
+    {
         // Check node count limit
         if graph.nodes().len() > self.config.resource_limits.max_nodes {
             return Err(ExecutionError::ResourceLimit {
@@ -424,7 +436,10 @@ impl ExecutionEngine {
     }
     
     /// Create execution plan
-    fn create_execution_plan(&self, graph: &Graph) -> Result<ExecutionPlan, ExecutionError> {
+    fn create_execution_plan<S>(&self, graph: &Graph<S>) -> Result<ExecutionPlan, ExecutionError>
+    where
+        S: crate::state::State,
+    {
         let mut plan = ExecutionPlan::new();
         
         // Topological sort for execution order
@@ -469,12 +484,15 @@ impl ExecutionEngine {
     }
     
     /// Execute graph in parallel
-    async fn execute_parallel(
+    async fn execute_parallel<S>(
         &self,
-        graph: &Graph,
+        graph: &Graph<S>,
         plan: &ExecutionPlan,
         context: &mut ExecutionContext,
-    ) -> Result<ExecutionResult, ExecutionError> {
+    ) -> Result<ExecutionResult, ExecutionError>
+    where
+        S: crate::state::State,
+    {
         let mut current_state = context.current_state.clone();
         
         for level in &plan.execution_levels {
@@ -533,12 +551,15 @@ impl ExecutionEngine {
     }
     
     /// Execute graph sequentially
-    async fn execute_sequential(
+    async fn execute_sequential<S>(
         &self,
-        graph: &Graph,
+        graph: &Graph<S>,
         plan: &ExecutionPlan,
         context: &mut ExecutionContext,
-    ) -> Result<ExecutionResult, ExecutionError> {
+    ) -> Result<ExecutionResult, ExecutionError>
+    where
+        S: crate::state::State,
+    {
         let mut current_state = context.current_state.clone();
         
         for level in &plan.execution_levels {
@@ -577,11 +598,14 @@ impl ExecutionEngine {
     }
     
     /// Execute a single node with retry logic
-    async fn execute_node_with_retry(
-        node: &Node,
-        input_state: State,
+    async fn execute_node_with_retry<S>(
+        node: &dyn Node<S>,
+        input_state: ExecutionState,
         config: &ExecutionConfig,
-    ) -> Result<NodeExecution, ExecutionError> {
+    ) -> Result<NodeExecution, ExecutionError>
+    where
+        S: crate::state::State,
+    {
         let mut execution = NodeExecution::new(node.id().clone(), input_state.clone());
         execution.start();
         
@@ -685,7 +709,7 @@ pub struct ExecutionResult {
     /// Final status
     pub status: ExecutionStatus,
     /// Final state
-    pub final_state: State,
+    pub final_state: ExecutionState,
     /// Total execution time
     pub execution_time: Duration,
     /// Number of node executions
@@ -753,7 +777,7 @@ mod tests {
     #[test]
     fn test_execution_context_creation() {
         let config = ExecutionConfig::default();
-        let state = State::new();
+        let state = serde_json::json!({});
         let context = ExecutionContext::new(config, state);
         
         assert_eq!(context.status, ExecutionStatus::Pending);
@@ -763,8 +787,8 @@ mod tests {
 
     #[test]
     fn test_node_execution_lifecycle() {
-        let node_id = NodeId::new("test_node".to_string());
-        let state = State::new();
+        let node_id = "test_node".to_string();
+        let state = serde_json::json!({});
         let mut execution = NodeExecution::new(node_id, state.clone());
         
         assert_eq!(execution.status, NodeExecutionStatus::Pending);
