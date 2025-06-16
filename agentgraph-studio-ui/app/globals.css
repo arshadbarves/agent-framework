@@ -1,0 +1,401 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Import Inter font */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@100;200;300;400;500;600;700;800&display=swap');
+
+@layer base {
+  :root {
+    /* Light theme - Clean and professional */
+    --background: 0 0% 100%;
+    --foreground: 240 10% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 3.9%;
+    --primary: 221.2 83.2% 53.3%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 98%;
+    --secondary-foreground: 222.2 84% 4.9%;
+    --muted: 210 40% 98%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 98%;
+    --accent-foreground: 222.2 84% 4.9%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 221.2 83.2% 53.3%;
+    --radius: 0.75rem;
+  }
+
+  .dark {
+    /* Dark theme - Clean grays without blue tint */
+    --background: 0 0% 9%;
+    --foreground: 0 0% 98%;
+    --card: 0 0% 12%;
+    --card-foreground: 0 0% 98%;
+    --popover: 0 0% 12%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 217.2 91.2% 59.8%;
+    --primary-foreground: 0 0% 9%;
+    --secondary: 0 0% 18%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 0 0% 18%;
+    --muted-foreground: 0 0% 65%;
+    --accent: 0 0% 18%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 20%;
+    --input: 0 0% 18%;
+    --ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+@layer components {
+
+  /* Custom scrollbar */
+  .custom-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(156, 163, 175, 0.5) transparent;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: rgba(156, 163, 175, 0.5);
+    border-radius: 3px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(156, 163, 175, 0.7);
+  }
+
+  /* AgentGraph specific components */
+  .workflow-canvas {
+    background-image:
+      radial-gradient(circle, #e5e7eb 1px, transparent 1px);
+    background-size: 20px 20px;
+    background-position: 0 0, 10px 10px;
+  }
+
+  .workflow-canvas.dark {
+    background-image:
+      radial-gradient(circle, #374151 1px, transparent 1px);
+  }
+
+  /* Node styles */
+  .workflow-node {
+    @apply relative rounded-lg shadow-lg border-2 transition-all duration-200 cursor-pointer;
+  }
+
+  .workflow-node:hover {
+    @apply shadow-xl transform scale-105;
+  }
+
+  .workflow-node.running {
+    @apply animate-node-pulse;
+  }
+
+  .workflow-node.agent {
+    @apply bg-gradient-to-br from-green-500 to-green-600 border-green-400 text-white;
+  }
+
+  .workflow-node.tool {
+    @apply bg-gradient-to-br from-blue-500 to-blue-600 border-blue-400 text-white;
+  }
+
+  .workflow-node.routing {
+    @apply bg-gradient-to-br from-orange-500 to-orange-600 border-orange-400 text-white;
+  }
+
+  .workflow-node.quality_gate {
+    @apply bg-gradient-to-br from-purple-500 to-purple-600 border-purple-400 text-white;
+  }
+
+  .workflow-node.start {
+    @apply bg-gradient-to-br from-green-500 to-green-600 border-green-400 text-white;
+  }
+
+  .workflow-node.end {
+    @apply bg-gradient-to-br from-red-500 to-red-600 border-red-400 text-white;
+  }
+
+  /* Status indicators */
+  .status-indicator {
+    @apply inline-block w-3 h-3 rounded-full;
+  }
+
+  .status-indicator.running {
+    @apply bg-yellow-500 animate-pulse;
+  }
+
+  .status-indicator.completed {
+    @apply bg-green-500;
+  }
+
+  .status-indicator.failed {
+    @apply bg-red-500;
+  }
+
+  .status-indicator.pending {
+    @apply bg-gray-400;
+  }
+
+  /* Metric cards */
+  .metric-card {
+    @apply bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 rounded-xl p-6 shadow-lg border border-gray-200 dark:border-gray-700 transition-all duration-200 hover:shadow-xl hover:scale-105;
+  }
+
+  .metric-value {
+    @apply text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent;
+  }
+
+  /* Clean card effects with subtle animations */
+  .glass-card {
+    @apply bg-white dark:bg-neutral-800 border border-gray-200 dark:border-neutral-700 rounded-xl shadow-sm transition-all duration-300 ease-out hover:shadow-md hover:scale-[1.01];
+  }
+
+  /* Subtle animations */
+  .subtle-hover {
+    @apply transition-all duration-200 ease-out hover:scale-[1.02] hover:shadow-sm;
+  }
+
+  .fade-in {
+    @apply animate-in fade-in-0 duration-500 ease-out;
+  }
+
+  .slide-up {
+    @apply animate-in slide-in-from-bottom-4 duration-400 ease-out;
+  }
+
+  .gentle-bounce {
+    animation: gentle-bounce 2s ease-in-out infinite;
+  }
+
+  @keyframes gentle-bounce {
+
+    0%,
+    100% {
+      transform: translateY(0px);
+    }
+
+    50% {
+      transform: translateY(-2px);
+    }
+  }
+
+  .pulse-subtle {
+    animation: pulse-subtle 3s ease-in-out infinite;
+  }
+
+  @keyframes pulse-subtle {
+
+    0%,
+    100% {
+      opacity: 1;
+    }
+
+    50% {
+      opacity: 0.8;
+    }
+  }
+
+  /* Improved focus states */
+  .focus-ring {
+    @apply focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-neutral-900 transition-all duration-200;
+  }
+
+  /* Micro-interactions */
+  .micro-bounce {
+    animation: micro-bounce 0.6s ease-out;
+  }
+
+  @keyframes micro-bounce {
+    0% {
+      transform: scale(1);
+    }
+
+    50% {
+      transform: scale(1.05);
+    }
+
+    100% {
+      transform: scale(1);
+    }
+  }
+
+  .glow-on-hover {
+    @apply transition-all duration-300 ease-out hover:shadow-lg hover:shadow-blue-500/10;
+  }
+
+  /* Improved scrollbars */
+  .custom-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: rgb(156 163 175) transparent;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: rgb(156 163 175);
+    border-radius: 3px;
+    transition: background-color 0.2s ease;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background-color: rgb(107 114 128);
+  }
+
+  .dark .custom-scrollbar {
+    scrollbar-color: rgb(75 85 99) transparent;
+  }
+
+  .dark .custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: rgb(75 85 99);
+  }
+
+  .dark .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background-color: rgb(107 114 128);
+  }
+
+  /* Loading animations */
+  .loading-skeleton {
+    @apply animate-pulse bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 dark:from-gray-700 dark:via-gray-600 dark:to-gray-700;
+    background-size: 200% 100%;
+    animation: loading-shimmer 1.5s infinite;
+  }
+
+  @keyframes loading-shimmer {
+    0% {
+      background-position: -200% 0;
+    }
+
+    100% {
+      background-position: 200% 0;
+    }
+  }
+
+  /* Code syntax highlighting */
+  .code-block {
+    @apply bg-gray-900 text-gray-100 rounded-lg p-4 font-mono text-sm border border-gray-700 overflow-x-auto custom-scrollbar;
+  }
+
+  .code-block .keyword {
+    @apply text-purple-400;
+  }
+
+  .code-block .string {
+    @apply text-green-400;
+  }
+
+  .code-block .comment {
+    @apply text-gray-500 italic;
+  }
+
+  /* Workflow edge styles */
+  .workflow-edge {
+    @apply stroke-2 stroke-gray-400 dark:stroke-gray-600;
+  }
+
+  .workflow-edge.active {
+    @apply stroke-blue-500 animate-pulse;
+  }
+
+  .workflow-edge.tool-call {
+    @apply stroke-blue-500 stroke-dasharray-[5, 5];
+  }
+
+  .workflow-edge.conditional {
+    @apply stroke-orange-500 stroke-dasharray-[10, 5];
+  }
+
+  /* Responsive grid layouts */
+  .dashboard-grid {
+    @apply grid gap-6;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  }
+
+  .metrics-grid {
+    @apply grid gap-4;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  }
+
+  /* Interactive elements */
+  .interactive-hover {
+    @apply transition-all duration-200 hover:shadow-lg hover:scale-105 hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer;
+  }
+
+  /* Focus styles for accessibility */
+  .focus-ring {
+    @apply focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900;
+  }
+}
+
+@layer utilities {
+
+  /* Text utilities */
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  /* Layout utilities */
+  .safe-area-inset {
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+  }
+
+  /* Animation utilities */
+  .animate-fade-in-up {
+    animation: fade-in-up 0.6s ease-out;
+  }
+
+  @keyframes fade-in-up {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Performance utilities */
+  .gpu-accelerated {
+    transform: translateZ(0);
+    will-change: transform;
+  }
+}
