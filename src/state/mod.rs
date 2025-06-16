@@ -9,7 +9,35 @@ use uuid::Uuid;
 use chrono::{DateTime, Utc};
 
 /// Core trait that all state objects must implement
-pub trait State: Debug + Clone + Send + Sync + 'static {}
+pub trait State: Debug + Clone + Send + Sync + 'static {
+    /// Get a value from the state by key (optional for advanced state access)
+    fn get_value(&self, key: &str) -> Option<serde_json::Value> {
+        // Default implementation returns None - states can override this
+        let _ = key;
+        None
+    }
+
+    /// Set a value in the state by key (optional for advanced state access)
+    fn set_value(&mut self, key: &str, value: serde_json::Value) -> crate::error::GraphResult<()> {
+        // Default implementation does nothing - states can override this
+        let _ = (key, value);
+        Ok(())
+    }
+
+    /// Serialize the state to JSON (optional for advanced state access)
+    fn to_json(&self) -> crate::error::GraphResult<serde_json::Value> {
+        // Default implementation tries to serialize using serde
+        serde_json::to_value(self).map_err(|e| {
+            crate::error::GraphError::state_error(format!("Failed to serialize state: {}", e))
+        })
+    }
+
+    /// Get all keys in the state (optional for advanced state access)
+    fn keys(&self) -> Vec<String> {
+        // Default implementation returns empty vector
+        Vec::new()
+    }
+}
 
 /// Automatic implementation for types that meet the requirements
 impl<T> State for T where T: Debug + Clone + Send + Sync + 'static {}

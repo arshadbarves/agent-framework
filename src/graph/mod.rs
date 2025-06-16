@@ -1,7 +1,11 @@
 //! Core graph engine and execution logic.
 
+pub mod agent_node;
+pub mod command;
 pub mod engine;
 pub mod executor;
+pub mod routing_node;
+pub mod tool_node;
 
 use crate::edge::{Edge, EdgeRegistry};
 use crate::error::{GraphError, GraphResult};

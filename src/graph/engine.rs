@@ -17,7 +17,7 @@ use crate::streaming::ExecutionEvent;
 #[derive(Debug)]
 pub struct GraphEngine<S>
 where
-    S: State + serde::Serialize + for<'de> serde::Deserialize<'de>,
+    S: State + Clone + serde::Serialize + for<'de> serde::Deserialize<'de>,
 {
     /// Edge resolver for routing decisions
     edge_resolver: EdgeResolver<S>,
@@ -25,7 +25,7 @@ where
 
 impl<S> GraphEngine<S>
 where
-    S: State + serde::Serialize + for<'de> serde::Deserialize<'de>,
+    S: State + Clone + serde::Serialize + for<'de> serde::Deserialize<'de>,
 {
     /// Create a new graph engine
     pub fn new() -> Self {
@@ -402,7 +402,7 @@ where
 
 impl<S> Default for GraphEngine<S>
 where
-    S: State + serde::Serialize + for<'de> serde::Deserialize<'de>,
+    S: State + Clone + serde::Serialize + for<'de> serde::Deserialize<'de>,
 {
     fn default() -> Self {
         Self::new()

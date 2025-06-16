@@ -29,11 +29,11 @@ pub enum ParallelStrategy {
 
 /// Work item for parallel execution
 #[derive(Debug, Clone)]
-pub struct WorkItem {
+pub struct WorkItem<S: State> {
     /// Node to execute
-    pub node: Arc<Node>,
+    pub node: Arc<dyn Node<S>>,
     /// Input state
-    pub input_state: State,
+    pub input_state: S,
     /// Priority (higher = more important)
     pub priority: u32,
     /// Dependencies that must complete first
@@ -42,9 +42,9 @@ pub struct WorkItem {
     pub estimated_duration: Option<Duration>,
 }
 
-impl WorkItem {
+impl<S: State> WorkItem<S> {
     /// Create a new work item
-    pub fn new(node: Arc<Node>, input_state: State) -> Self {
+    pub fn new(node: Arc<dyn Node<S>>, input_state: S) -> Self {
         Self {
             node,
             input_state,
@@ -185,6 +185,7 @@ impl WorkQueue {
 
 /// Parallel execution worker
 #[derive(Debug)]
+#[derive(Clone)]
 pub struct Worker {
     /// Worker ID
     pub id: usize,
@@ -281,7 +282,7 @@ impl ParallelExecutor {
     pub fn new(config: ExecutionConfig, strategy: ParallelStrategy) -> Self {
         let semaphore = Arc::new(Semaphore::new(config.max_concurrency));
         let work_queue = Arc::new(RwLock::new(WorkQueue::new()));
-        let workers = Arc::new(RwLock::new(Vec::new()));
+        let workers = Arc::new(RwLock::new(Vec::<Worker>::new()));
         
         // Initialize workers
         let mut worker_vec = Vec::new();
@@ -300,9 +301,9 @@ impl ParallelExecutor {
     }
     
     /// Execute work items in parallel
-    pub async fn execute_parallel(
+    pub async fn execute_parallel<S: State>(
         &self,
-        work_items: Vec<WorkItem>,
+        work_items: Vec<WorkItem<S>>,
     ) -> Result<HashMap<NodeId, NodeExecution>, ParallelExecutionError> {
         // Add work items to queue
         {
@@ -426,8 +427,8 @@ impl ParallelExecutor {
     }
     
     /// Execute a single work item
-    async fn execute_work_item(
-        item: &WorkItem,
+    async fn execute_work_item<S: State>(
+        item: &WorkItem<S>,
         config: &ExecutionConfig,
     ) -> Result<NodeExecution, ExecutionError> {
         let mut execution = NodeExecution::new(item.node.id().clone(), item.input_state.clone());
