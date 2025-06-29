@@ -1,0 +1,36 @@
+[package]
+name = "agent-graph-visualization"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
+documentation.workspace = true
+keywords.workspace = true
+categories.workspace = true
+description = "Visualization, debugging, and monitoring interface for AgentGraph"
+
+[dependencies]
+agent-graph-core = { path = "../agent-graph-core" }
+agent-graph-execution = { path = "../agent-graph-execution" }
+tokio = { workspace = true }
+futures = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+thiserror = { workspace = true }
+anyhow = { workspace = true }
+tracing = { workspace = true }
+async-trait = { workspace = true }
+uuid = { workspace = true }
+chrono = { workspace = true }
+indexmap = { workspace = true }
+parking_lot = { workspace = true }
+warp = { workspace = true }
+
+[features]
+default = ["web", "metrics"]
+tracer = []
+visualizer = []
+metrics = []
+web = []
+export = []

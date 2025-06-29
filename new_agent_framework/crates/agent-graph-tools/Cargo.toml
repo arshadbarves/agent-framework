@@ -1,0 +1,38 @@
+[package]
+name = "agent-graph-tools"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
+documentation.workspace = true
+keywords.workspace = true
+categories.workspace = true
+description = "Tools framework with built-in tools and execution runtime"
+
+[dependencies]
+agent-graph-core = { path = "../agent-graph-core" }
+tokio = { workspace = true }
+futures = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+thiserror = { workspace = true }
+anyhow = { workspace = true }
+tracing = { workspace = true }
+async-trait = { workspace = true }
+uuid = { workspace = true }
+chrono = { workspace = true }
+indexmap = { workspace = true }
+parking_lot = { workspace = true }
+reqwest = { workspace = true }
+base64 = "0.21"
+url = "2.4"
+
+[features]
+default = ["builtin", "http", "file"]
+builtin = []
+http = []
+file = []
+database = []
+math = []
+text = []

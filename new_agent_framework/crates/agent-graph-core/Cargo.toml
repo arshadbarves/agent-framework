@@ -1,0 +1,62 @@
+[package]
+name = "agent-graph-core"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
+documentation.workspace = true
+keywords.workspace = true
+categories.workspace = true
+description = "Core graph engine and execution logic for AgentGraph framework"
+readme = "README.md"
+
+[dependencies]
+# Core async runtime
+tokio = { workspace = true }
+futures = { workspace = true }
+
+# Serialization and state management
+serde = { workspace = true }
+serde_json = { workspace = true }
+
+# Error handling
+thiserror = { workspace = true }
+anyhow = { workspace = true }
+
+# Logging and tracing
+tracing = { workspace = true }
+
+# Async utilities
+async-trait = { workspace = true }
+
+# UUID for unique identifiers
+uuid = { workspace = true }
+
+# Time utilities
+chrono = { workspace = true }
+
+# Collections and data structures
+indexmap = { workspace = true }
+dashmap = { workspace = true }
+
+# Concurrency primitives
+parking_lot = { workspace = true }
+
+# Compression
+flate2 = { workspace = true }
+
+# Random number generation
+rand = { workspace = true }
+
+# Serialization
+bincode = { workspace = true }
+
+[features]
+default = []
+metrics = ["prometheus"]
+
+[dependencies.prometheus]
+workspace = true
+optional = true
+

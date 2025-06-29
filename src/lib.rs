@@ -92,6 +92,9 @@ pub mod agents;
 /// Advanced graph execution engine with parallel processing and streaming
 pub mod execution;
 
+/// Visual debugging and monitoring interface (LangSmith/LangGraph Studio equivalent)
+pub mod visualization;
+
 // Re-export core types for convenience
 pub use error::{GraphError, GraphResult};
 pub use graph::{Graph, GraphBuilder, ExecutionContext, ExecutionConfig};

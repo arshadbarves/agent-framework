@@ -1,0 +1,36 @@
+[package]
+name = "agent-graph-enterprise"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
+documentation.workspace = true
+keywords.workspace = true
+categories.workspace = true
+description = "Enterprise features: multi-tenancy, security, monitoring, and resource management"
+
+[dependencies]
+agent-graph-core = { path = "../agent-graph-core" }
+tokio = { workspace = true }
+futures = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+thiserror = { workspace = true }
+anyhow = { workspace = true }
+tracing = { workspace = true }
+async-trait = { workspace = true }
+uuid = { workspace = true }
+chrono = { workspace = true }
+indexmap = { workspace = true }
+dashmap = { workspace = true }
+parking_lot = { workspace = true }
+prometheus = { workspace = true }
+
+[features]
+default = ["tenancy", "security", "monitoring"]
+tenancy = []
+security = []
+monitoring = []
+resources = []
+audit = []

@@ -1,0 +1,62 @@
+[package]
+name = "agent-graph-llm"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
+documentation.workspace = true
+keywords.workspace = true
+categories.workspace = true
+description = "LLM integration with multi-provider support for AgentGraph"
+readme = "README.md"
+
+[dependencies]
+# Core dependencies
+agent-graph-core = { path = "../agent-graph-core" }
+
+# Core async runtime
+tokio = { workspace = true }
+futures = { workspace = true }
+
+# Serialization and state management
+serde = { workspace = true }
+serde_json = { workspace = true }
+
+# Error handling
+thiserror = { workspace = true }
+anyhow = { workspace = true }
+
+# Logging and tracing
+tracing = { workspace = true }
+
+# Async utilities
+async-trait = { workspace = true }
+async-stream = { workspace = true }
+
+# UUID for unique identifiers
+uuid = { workspace = true }
+
+# Time utilities
+chrono = { workspace = true }
+
+# Collections and data structures
+indexmap = { workspace = true }
+dashmap = { workspace = true }
+
+# Concurrency primitives
+parking_lot = { workspace = true }
+
+# HTTP client
+reqwest = { workspace = true }
+
+# Streaming
+tokio-stream = { workspace = true }
+
+[features]
+default = ["openai", "anthropic", "openrouter"]
+openai = []
+anthropic = []
+google = []
+openrouter = []
+mock = []

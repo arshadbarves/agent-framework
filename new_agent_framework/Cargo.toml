@@ -1,17 +1,29 @@
-[package]
-name = "agent_graph"
-version = "0.3.0"
+[workspace]
+members = [
+    "crates/agent-graph-core",
+    "crates/agent-graph-execution", 
+    "crates/agent-graph-agents",
+    "crates/agent-graph-llm",
+    "crates/agent-graph-tools",
+    "crates/agent-graph-human",
+    "crates/agent-graph-enterprise",
+    "crates/agent-graph-visualization",
+    "crates/agent-graph",
+    "crates/agent-graph-cli",
+]
+resolver = "2"
+
+[workspace.package]
+version = "0.4.0"
 edition = "2021"
 authors = ["AgentGraph Contributors"]
-description = "A powerful, production-grade multi-agent framework for Rust inspired by LangGraph"
 license = "MIT OR Apache-2.0"
 repository = "https://github.com/agent-graph/agent-graph"
 documentation = "https://docs.rs/agent_graph"
 keywords = ["ai", "agents", "graph", "async", "framework"]
 categories = ["asynchronous", "development-tools", "science"]
-readme = "README.md"
 
-[dependencies]
+[workspace.dependencies]
 # Core async runtime
 tokio = { version = "1.0", features = ["full"] }
 futures = "0.3"
@@ -65,34 +77,28 @@ tokio-stream = "0.1"
 broadcast = "0.1"
 warp = "0.3.7"
 
-[dev-dependencies]
+# Metrics
+prometheus = "0.13"
+
+# Compression
+flate2 = "1.0"
+
+[workspace.dev-dependencies]
 tokio-test = "0.4"
 criterion = { version = "0.5", features = ["html_reports"] }
 tempfile = "3.0"
 pretty_assertions = "1.0"
-uuid = { version = "1.0", features = ["v4"] }
-
-[[bench]]
-name = "graph_execution"
-harness = false
 
 
+[profile.release]
+lto = true
+codegen-units = 1
+panic = "abort"
 
-[features]
-default = ["checkpointing", "streaming", "parallel"]
-checkpointing = []
-streaming = []
-parallel = []
-metrics = ["prometheus"]
+[profile.dev]
+debug = true
+opt-level = 0
 
-[dependencies.prometheus]
-version = "0.13"
-optional = true
-
-[package.metadata.docs.rs]
-all-features = true
-rustdoc-args = ["--cfg", "docsrs"]
-
-[[bin]]
-name = "simple_backend"
-path = "simple_backend.rs"
+[profile.test]
+debug = true
+opt-level = 1

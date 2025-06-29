@@ -1,0 +1,35 @@
+[package]
+name = "agent-graph"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
+documentation.workspace = true
+keywords.workspace = true
+categories.workspace = true
+description = "A powerful, production-grade multi-agent framework for Rust"
+
+[dependencies]
+# Core foundation
+agent-graph-core = { path = "../agent-graph-core" }
+
+# Feature crates (optional)
+agent-graph-execution = { path = "../agent-graph-execution", optional = true }
+agent-graph-agents = { path = "../agent-graph-agents", optional = true }
+agent-graph-llm = { path = "../agent-graph-llm", optional = true }
+agent-graph-tools = { path = "../agent-graph-tools", optional = true }
+agent-graph-human = { path = "../agent-graph-human", optional = true }
+agent-graph-enterprise = { path = "../agent-graph-enterprise", optional = true }
+agent-graph-visualization = { path = "../agent-graph-visualization", optional = true }
+
+[features]
+default = ["execution", "agents"]
+execution = ["agent-graph-execution"]
+agents = ["agent-graph-agents"]
+llm = ["agent-graph-llm"]
+tools = ["agent-graph-tools"]
+human = ["agent-graph-human"]
+enterprise = ["agent-graph-enterprise"]
+visualization = ["agent-graph-visualization"]
+full = ["execution", "agents", "llm", "tools", "human", "enterprise", "visualization"]
