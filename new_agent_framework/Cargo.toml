@@ -83,6 +83,17 @@ prometheus = "0.13"
 # Compression
 flate2 = "1.0"
 
+# Workspace crates
+agent-graph-core = { path = "crates/agent-graph-core" }
+agent-graph-execution = { path = "crates/agent-graph-execution" }
+agent-graph-agents = { path = "crates/agent-graph-agents" }
+agent-graph-llm = { path = "crates/agent-graph-llm" }
+agent-graph-tools = { path = "crates/agent-graph-tools" }
+agent-graph-human = { path = "crates/agent-graph-human" }
+agent-graph-enterprise = { path = "crates/agent-graph-enterprise" }
+agent-graph-visualization = { path = "crates/agent-graph-visualization" }
+agent-graph = { path = "crates/agent-graph" }
+
 [workspace.dev-dependencies]
 tokio-test = "0.4"
 criterion = { version = "0.5", features = ["html_reports"] }

@@ -1,0 +1,47 @@
+{
+  "name": "Simple Workflow",
+  "description": "A basic workflow demonstrating AgentGraph capabilities",
+  "entry_point": "start",
+  "finish_points": ["end"],
+  "nodes": {
+    "start": {
+      "node_type": "agent",
+      "config": {
+        "role": "researcher",
+        "task": "Gather initial information about {topic}"
+      }
+    },
+    "analyze": {
+      "node_type": "agent", 
+      "config": {
+        "role": "analyst",
+        "task": "Analyze the research data and provide insights"
+      }
+    },
+    "approve": {
+      "node_type": "human_approval",
+      "config": {
+        "prompt": "Please review the analysis results",
+        "timeout_seconds": 300
+      }
+    },
+    "end": {
+      "node_type": "tool",
+      "config": {
+        "tool_name": "file_write",
+        "parameters": {
+          "path": "results.json",
+          "content": "{final_results}"
+        }
+      }
+    }
+  },
+  "edges": {
+    "start": [{"to": "analyze"}],
+    "analyze": [{"to": "approve"}],
+    "approve": [
+      {"to": "end", "condition": "approved"},
+      {"to": "analyze", "condition": "rejected"}
+    ]
+  }
+}

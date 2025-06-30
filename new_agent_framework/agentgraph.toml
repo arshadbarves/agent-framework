@@ -1,0 +1,45 @@
+# AgentGraph Configuration File
+
+[providers]
+# OpenAI Configuration
+# openai_api_key = "your-openai-api-key-here"
+
+# Anthropic Configuration  
+# anthropic_api_key = "your-anthropic-api-key-here"
+
+# Google Configuration
+# google_api_key = "your-google-api-key-here"
+
+# OpenRouter Configuration
+# openrouter_api_key = "your-openrouter-api-key-here"
+
+[output]
+default_format = "pretty"
+colors = true
+verbose = false
+
+[execution]
+default_timeout = 300
+max_retries = 3
+parallel_execution = true
+
+[logging]
+level = "info"
+format = "pretty"
+
+[enterprise]
+multi_tenancy_enabled = false
+audit_logging_enabled = false
+security_mode = "standard"
+
+[tools]
+# Tool-specific configurations
+http_timeout = 30
+file_max_size_mb = 10
+database_pool_size = 5
+
+[agents]
+# Agent-specific configurations
+default_memory_size_mb = 50
+collaboration_enabled = true
+max_concurrent_agents = 10
